@@ -7,7 +7,7 @@ import App from '../final/01'
 
 test('clicking the button increments the count', () => {
   const {container} = render(<App />)
-  const button = container.querySelector('button')
+  const button = container.querySelector('button') as HTMLButtonElement
   userEvent.click(button)
   expect(button).toHaveTextContent('1')
 })
@@ -18,9 +18,9 @@ test('clicking the button increments the count', () => {
 // but your apps should not have tests like this.
 // That's an implementation detail... Read more: https://kcd.im/imp-deets
 test('using useReducer', () => {
-  const createElement = React.createElement
-  let counterFn
-  React.createElement = (...args) => {
+  const createElement = React.createElement as any
+  let counterFn: any
+  ;(React.createElement as any) = (...args: any[]) => {
     if (args[0] && args[0].name === 'Counter') {
       counterFn = args[0]
     }
@@ -30,10 +30,10 @@ test('using useReducer', () => {
   React.createElement = createElement
 
   const lines = counterFn.toString().split('\n')
-  const useReducerLine = lines.find(line => {
+  const useReducerLine = lines.find((line: string) => {
     return !line.trim().startsWith('//') && line.includes('useReducer(')
   })
-  const useStateLine = lines.find(line => {
+  const useStateLine = lines.find((line: string) => {
     return !line.trim().startsWith('//') && line.includes('useState(')
   })
   if (!useReducerLine || useStateLine) {

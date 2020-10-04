@@ -10,8 +10,8 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  window.fetch.mockRestore()
-  console.error.mockRestore()
+  ;(window.fetch as jest.Mock).mockRestore()
+  ;(console.error as jest.Mock).mockRestore()
 })
 
 test('displays the pokemon', async () => {
@@ -33,7 +33,7 @@ test('displays the pokemon', async () => {
   await screen.findByRole('heading', {name: /ditto/i})
 
   // verify that when props remain the same a request is not made
-  window.fetch.mockClear()
+  ;(window.fetch as jest.Mock).mockClear()
 
   userEvent.click(submit)
 
@@ -45,7 +45,7 @@ test('displays the pokemon', async () => {
   ).not.toHaveBeenCalled()
 
   // verify error handling
-  console.error.mockImplementation(() => {})
+  ;(console.error as jest.Mock).mockImplementation(() => {})
 
   userEvent.clear(input)
   userEvent.type(input, 'george')
@@ -54,9 +54,8 @@ test('displays the pokemon', async () => {
     /There was an error.*Unsupported pokemon.*george/,
   )
   expect(console.error).toHaveBeenCalledTimes(2)
-
-  console.error.mockReset()
-  window.fetch.mockClear()
+  ;(console.error as jest.Mock).mockReset()
+  ;(window.fetch as jest.Mock).mockClear()
 
   // use the cached value
   userEvent.click(screen.getByRole('button', {name: /ditto/i}))

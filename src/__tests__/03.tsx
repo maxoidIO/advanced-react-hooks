@@ -21,10 +21,13 @@ test('clicking the button increments the count', () => {
 // but your apps should not have tests like this.
 // That's an implementation detail... Read more: https://kcd.im/imp-deets
 test('CountProvider is rendering a context provider with the right value', () => {
-  const createElement = React.createElement
+  const createElement = React.createElement as any
 
-  const providerProps = {}
-  React.createElement = (...args) => {
+  const providerProps: {
+    children?: any
+    value?: Function[]
+  } = {}
+  React.createElement = (...args: any[]) => {
     if (args[0].$$typeof === Symbol.for('react.provider')) {
       Object.assign(providerProps, args[1])
       if (args.length > 2) {
@@ -39,7 +42,7 @@ test('CountProvider is rendering a context provider with the right value', () =>
   expect(providerProps.value).toEqual([0, expect.any(Function)])
 
   act(() => {
-    providerProps.value[1](1) // lol
+    ;(providerProps as any).value[1](1) // lol
   })
 
   // assert that calling setCount directly updates the count state

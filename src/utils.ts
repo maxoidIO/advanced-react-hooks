@@ -1,11 +1,14 @@
 import React from 'react'
+import {Action, Pokemon, ReducerState} from './typings'
 
-function useSafeDispatch(dispatch) {
+function useSafeDispatch(dispatch: Function) {
   const mounted = React.useRef(false)
 
   React.useLayoutEffect(() => {
     mounted.current = true
-    return () => (mounted.current = false)
+    return () => {
+      mounted.current = false
+    }
   }, [])
 
   return React.useCallback(
@@ -14,7 +17,7 @@ function useSafeDispatch(dispatch) {
   )
 }
 
-function asyncReducer(state, action) {
+function asyncReducer(_state: ReducerState, action: Action) {
   switch (action.type) {
     case 'pending': {
       return {status: 'pending', data: null, error: null}
@@ -31,8 +34,8 @@ function asyncReducer(state, action) {
   }
 }
 
-function useAsync(initialState) {
-  const [state, unsafeDispatch] = React.useReducer(asyncReducer, {
+function useAsync(initialState?: ReducerState | any) {
+  const [state, unsafeDispatch] = React.useReducer(asyncReducer as any, {
     status: 'idle',
     data: null,
     error: null,
@@ -41,16 +44,16 @@ function useAsync(initialState) {
 
   const dispatch = useSafeDispatch(unsafeDispatch)
 
-  const {data, error, status} = state
+  const {data, error, status} = state as ReducerState
 
   const run = React.useCallback(
     promise => {
       dispatch({type: 'pending'})
       promise.then(
-        data => {
+        (data: Pokemon) => {
           dispatch({type: 'resolved', data})
         },
-        error => {
+        (error: Error) => {
           dispatch({type: 'rejected', error})
         },
       )

@@ -3,7 +3,7 @@
 
 import React from 'react'
 
-function useMedia(query, initialState = false) {
+function useMedia(query: string, initialState = false) {
   const [state, setState] = React.useState(initialState)
   // 🐨 call React.useDebugValue here.
   // 💰 here's the formatted label I use: `\`${query}\` => ${state}`
@@ -34,7 +34,7 @@ function Box() {
   const isBig = useMedia('(min-width: 1000px)')
   const isMedium = useMedia('(max-width: 999px) and (min-width: 700px)')
   const isSmall = useMedia('(max-width: 699px)')
-  const color = isBig ? 'green' : isMedium ? 'yellow' : isSmall ? 'red' : null
+  const color = isBig ? 'green' : isMedium ? 'yellow' : isSmall ? 'red' : ''
 
   return <div style={{width: 200, height: 200, backgroundColor: color}} />
 }
